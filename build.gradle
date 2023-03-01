@@ -1,0 +1,51 @@
+plugins {
+    id("java")
+    id("application")
+    id("org.springframework.boot") version "2.6.7"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+}
+
+group = "com.zsh"
+version = "1.0.0-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_11
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    maven{
+        allowInsecureProtocol = true
+        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    }
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("org.apache.commons:commons-lang3")
+    implementation("com.baomidou:mybatis-plus-boot-starter:3.3.2")
+    implementation("org.apache.commons:commons-pool2")
+    runtimeOnly("com.h2database:h2")
+    runtimeOnly("org.springframework.boot:spring-boot-devtools")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+jar {
+    processResources {
+        exclude("db/*")
+    }
+}
+
+tasks.withType(Test) {
+    systemProperty("spring.profiles.active", "unittest")
+    useJUnitPlatform()
+}

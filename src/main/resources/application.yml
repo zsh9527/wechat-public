@@ -1,0 +1,52 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: qqbot
+  jackson:
+    time-zone: GMT+8
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
+    date-format: com.fasterxml.jackson.databind.util.StdDateFormat
+  http:
+    connect-time-out: 6
+    read-time-out: 6
+    write-time-out: 6
+    max-connection: 1000
+    max-request: 100
+    max-per-host-request: 30
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: 123456
+    url: jdbc:h2:file:D:\coderLife\githubProject\wechat-public;MODE=MySQL;DATABASE_TO_LOWER=TRUE;AUTO_SERVER=TRUE
+    hikari:
+      connection-timeout: 10000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 100000
+      maximum-pool-size: 30
+      minimum-idle: 5
+      read-only: false
+  sql:
+    init:
+      schema-locations: classpath:sql/init.sql
+      mode: never
+logging:
+  file:
+    path: /home/logs/${spring.application.name}
+  level:
+    org: warn
+    com: warn
+    i: warn
+    io: warn
+    reactor: warn
+    com.zsh: info
+    okhttp3:
+      OkHttpClient: error
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
