@@ -2,7 +2,7 @@ server:
   port: 8081
 spring:
   application:
-    name: qqbot
+    name: wechat
   jackson:
     time-zone: GMT+8
     property-naming-strategy: SNAKE_CASE
