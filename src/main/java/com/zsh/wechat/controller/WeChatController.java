@@ -1,9 +1,7 @@
 package com.zsh.wechat.controller;
 
-import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.zsh.wechat.pojo.dto.EncryptRequestDTO;
-import com.zsh.wechat.pojo.dto.RequestDTO;
+import com.zsh.wechat.pojo.req.EncryptRequestDTO;
+import com.zsh.wechat.pojo.req.MessageReqDTO;
 import com.zsh.wechat.util.SignatureUtils;
 import com.zsh.wechat.util.XmlUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class WeChatController {
 
     private final SignatureUtils signatureUtils;
-
-    private JacksonXmlModule module = new JacksonXmlModule();
-    private XmlMapper mapper = new XmlMapper(module);
+    private final XmlUtils xmlUtils;
 
     /**
      * 微信公众号接入
@@ -67,21 +63,21 @@ public class WeChatController {
                        @RequestParam(name = "encrypt_type", required = false) String encryptType,
                        @RequestParam(name = "msg_signature", required = false) String msgSignature) {
         //signatureUtils.checkSignature(signature, timestamp, nonce);
-        RequestDTO requestDTO;
+        MessageReqDTO requestDTO;
         if (StringUtils.isEmpty(encryptType)) {
             // 未加密数据
-            requestDTO = XmlUtils.parseXml(requestBody, RequestDTO.class);
-            return XmlUtils.generateContent(requestDTO, requestDTO.getContent());
+            requestDTO = xmlUtils.parseReqMessage(requestBody);
+            return xmlUtils.generateXml(requestDTO.buildReplyDTO());
         } else {
             // aes加密
-            EncryptRequestDTO encryptRequestDTO = XmlUtils.parseXml(requestBody, EncryptRequestDTO.class);
+            EncryptRequestDTO encryptRequestDTO = xmlUtils.parseXml(requestBody, EncryptRequestDTO.class);
             String content = signatureUtils
                 .decryptMsg(msgSignature, timestamp, nonce, encryptRequestDTO.getEncrypt());
             // 获取解密后数据
-            requestDTO = XmlUtils.parseXml(content, RequestDTO.class);
+            requestDTO = xmlUtils.parseReqMessage(content);
             requestDTO.setToUserName(encryptRequestDTO.getToUserName());
             //
-            return signatureUtils.encryptMsg(XmlUtils.generateContent(requestDTO, requestDTO.getContent()), timestamp, nonce);
+            return signatureUtils.encryptMsg(xmlUtils.generateXml(requestDTO.buildReplyDTO()), timestamp, nonce);
         }
     }
 

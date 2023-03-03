@@ -1,6 +1,7 @@
 package com.zsh.wechat.util;
 
 import com.zsh.wechat.config.WechatProp;
+import com.zsh.wechat.pojo.resp.EncryptReplyDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Base64;
@@ -27,6 +28,7 @@ import static com.zsh.wechat.util.PKCS7Encoder.CHARSET;
 public class SignatureUtils {
 
     private final WechatProp wechatProp;
+    private final XmlUtils xmlUtils;
 
     private static final char[] CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
@@ -109,7 +111,8 @@ public class SignatureUtils {
         String encryptContent = encrypt(replyMsg, getRandomStr());
         String msgSignature = generateSha1Code(timeStamp, nonce, encryptContent);
         // 生成发送的xml
-        return XmlUtils.generateEncryptContent(encryptContent, msgSignature, timeStamp, nonce);
+        EncryptReplyDTO encryptReplyDTO = new EncryptReplyDTO(encryptContent, msgSignature, timeStamp, nonce);
+        return xmlUtils.generateXml(encryptReplyDTO);
     }
 
     /**
