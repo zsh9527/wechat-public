@@ -1,6 +1,7 @@
 package com.zsh.wechat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zsh.wechat.client.HttpClient;
 import com.zsh.wechat.pojo.TokenDTO;
 import com.zsh.wechat.service.TokenService;
 import lombok.SneakyThrows;
@@ -8,6 +9,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * token 管理器测试
@@ -20,6 +25,9 @@ public class TokenServiceTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private HttpClient httpClient;
 
     @SneakyThrows
     @Test
@@ -35,5 +43,19 @@ public class TokenServiceTest {
     @Test
     void testGetAccessToken() {
         Assertions.assertDoesNotThrow(() -> tokenService.getAccessToken());
+    }
+
+    /**
+     * 创建菜单 -- 从resources/menu读取目录
+     *
+     * 个人账号无法开通微信认证 -- 无法使用该API
+     */
+    @SneakyThrows
+    @Test
+    void createMenu() {
+        ClassPathResource resource = new ClassPathResource("menu.json");
+        String content = Files.readString( Paths.get(resource.getURI()));
+        String token = tokenService.getAccessToken();
+        httpClient.createMenu(token, content);
     }
 }

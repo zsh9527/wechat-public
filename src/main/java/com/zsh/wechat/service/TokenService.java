@@ -54,6 +54,7 @@ public class TokenService {
             }
 
         }
+        accessToken = tokenPO.getAccessToken();
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleWithFixedDelay(
             this::refreshAndSave,
@@ -75,7 +76,6 @@ public class TokenService {
     private TokenPO refreshAndSave() {
         log.info("刷新token");
         TokenDTO newToken = httpClient.getToken();
-        this.accessToken = newToken.getAccessToken();
         TokenPO tokenPO = new TokenPO();
         tokenPO.setAccessToken(newToken.getAccessToken());
         tokenPO.setExpiresIn(newToken.getExpiresIn());

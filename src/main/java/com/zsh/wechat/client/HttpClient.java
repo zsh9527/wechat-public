@@ -2,13 +2,12 @@ package com.zsh.wechat.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zsh.wechat.config.WechatProp;
+import com.zsh.wechat.pojo.ResultDTO;
 import com.zsh.wechat.pojo.TokenDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +25,7 @@ public class HttpClient {
     private final WechatProp wechatProp;
 
     private String tokenUrl;
+    private final String createMenuUrl = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s";
 
     @PostConstruct
     void init () {
@@ -44,6 +44,23 @@ public class HttpClient {
         Response response = requestContent(requestBuilder.build());
         return objectMapper.readValue(response.body().byteStream(), TokenDTO.class);
     }
+
+    /**
+     * 创建菜单
+     */
+    @SneakyThrows
+    public void createMenu(String token, String content) {
+        Request.Builder requestBuilder = new Request.Builder()
+            .url(String.format(createMenuUrl, token));
+        RequestBody body =  RequestBody.create(MediaType.parse("application/json"), content);
+        requestBuilder.post(body);
+        Response response = requestContent(requestBuilder.build());
+        ResultDTO result = objectMapper.readValue(response.body().byteStream(), ResultDTO.class);
+        if (!"0".equals(result.getErrcode())) {
+            throw new RuntimeException("创建菜单失败：" + result.getErrcode() + "-" + result.getErrmsg());
+        }
+    }
+
 
     private Response requestContent(Request request) throws IOException {
         Response response = okHttpClient.newCall(request).execute();
