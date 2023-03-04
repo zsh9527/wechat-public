@@ -6,6 +6,7 @@ import lombok.Getter;
 /**
  * 消息类型
  * EVENT 事件
+ * music和news用于消息回复
  */
 @Getter
 public enum MsgTypeEnum {
@@ -16,7 +17,9 @@ public enum MsgTypeEnum {
     SHORTVIDEO("shortvideo"),
     LOCATION("location"),
     LINK("link"),
-    EVENT("event");
+    EVENT("event"),
+    MUSIC("music"),
+    NEWS("news");
 
     @JsonValue
     private final String value;

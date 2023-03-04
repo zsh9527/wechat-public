@@ -1,5 +1,7 @@
 package com.zsh.wechat.pojo.resp;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +20,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MediaWithPicReply extends MediaWithContentReply {
 
-    private String articleCount;
-
-    private String articles;
-
+    @JacksonXmlCData
     private String picUrl;
 
+    @JacksonXmlCData
     private String url;
 }

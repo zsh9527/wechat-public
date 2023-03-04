@@ -1,5 +1,6 @@
 package com.zsh.wechat.pojo.resp;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MediaReply {
 
+    @JacksonXmlCData
     private String mediaId;
 }

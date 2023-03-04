@@ -22,7 +22,6 @@ import org.springframework.lang.NonNull;
 public class EncryptReplyDTO {
 
     @NonNull
-    @JacksonXmlCData
     private String encrypt;
 
     @NonNull

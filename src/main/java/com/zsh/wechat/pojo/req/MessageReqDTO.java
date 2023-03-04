@@ -37,7 +37,7 @@ public class MessageReqDTO {
     @NotNull
     private MsgTypeEnum MsgType;
 
-    @NotNull
+    @Nullable
     private Long MsgId;
 
     /**

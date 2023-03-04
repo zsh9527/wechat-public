@@ -1,5 +1,6 @@
 package com.zsh.wechat.pojo.resp;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MediaWithMusicReply extends MediaWithContentReply {
 
+    @JacksonXmlCData
     private String musicURL;
 
+    @JacksonXmlCData
     private String hQMusicUrl;
 
+    @JacksonXmlCData
     private String thumbMediaId;
 }

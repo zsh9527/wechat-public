@@ -1,11 +1,15 @@
 package com.zsh.wechat.pojo.resp;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.zsh.wechat.enums.MsgTypeEnum;
 import lombok.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
  * 返回信息
@@ -65,5 +69,16 @@ public class ReplyDTO {
      */
     @Nullable
     private MediaWithContentReply Music;
+
+    /**
+     * 图文消息个数
+     */
+    @Nullable
+    private Integer articleCount;
+
+    @Nullable
+    @JacksonXmlElementWrapper(localName = "Articles")
+    @JacksonXmlProperty(localName = "item")
+    private List<MediaWithPicReply> Articles;
 }
 

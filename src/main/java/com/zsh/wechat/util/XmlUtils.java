@@ -3,7 +3,6 @@ package com.zsh.wechat.util;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.zsh.wechat.pojo.req.AllMessageDTO;
 import com.zsh.wechat.pojo.req.MessageReqDTO;
-import com.zsh.wechat.pojo.resp.ReplyDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -33,9 +32,8 @@ public class XmlUtils {
      * 解析请求体消息
      */
     @SneakyThrows
-    public MessageReqDTO parseReqMessage(String content) {
-        AllMessageDTO allMessageDTO = parseXml(content, AllMessageDTO.class);
-        return allMessageDTO.converteMessageDTO();
+    public AllMessageDTO parseReqMessage(String content) {
+        return parseXml(content, AllMessageDTO.class);
     }
 
     /**

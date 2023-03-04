@@ -1,7 +1,10 @@
 package com.zsh.wechat.controller;
 
+import com.zsh.wechat.handler.MessageHandlerActor;
+import com.zsh.wechat.pojo.req.AllMessageDTO;
 import com.zsh.wechat.pojo.req.EncryptRequestDTO;
 import com.zsh.wechat.pojo.req.MessageReqDTO;
+import com.zsh.wechat.pojo.resp.ReplyDTO;
 import com.zsh.wechat.util.SignatureUtils;
 import com.zsh.wechat.util.XmlUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class WeChatController {
 
     private final SignatureUtils signatureUtils;
+    private final MessageHandlerActor messageHandlerActor;
     private final XmlUtils xmlUtils;
 
     /**
@@ -56,18 +60,19 @@ public class WeChatController {
     @PostMapping(produces = "application/xml; charset=UTF-8")
     @SneakyThrows
     public String message(@RequestParam(required = false) String signature,
-                       @RequestParam(required = false) String timestamp,
-                       @RequestParam(required = false) String nonce,
-                       @RequestParam(name = "openid", required = false) String openid,
-                       @RequestBody String requestBody,
-                       @RequestParam(name = "encrypt_type", required = false) String encryptType,
-                       @RequestParam(name = "msg_signature", required = false) String msgSignature) {
-        //signatureUtils.checkSignature(signature, timestamp, nonce);
-        MessageReqDTO requestDTO;
+                          @RequestParam(required = false) String timestamp,
+                          @RequestParam(required = false) String nonce,
+                          @RequestParam(name = "openid", required = false) String openid,
+                          @RequestBody String requestBody,
+                          @RequestParam(name = "encrypt_type", required = false) String encryptType,
+                          @RequestParam(name = "msg_signature", required = false) String msgSignature) {
+        // TODO 调式接口
+        // signatureUtils.checkSignature(signature, timestamp, nonce);
+        AllMessageDTO requestDTO;
         if (StringUtils.isEmpty(encryptType)) {
             // 未加密数据
             requestDTO = xmlUtils.parseReqMessage(requestBody);
-            return xmlUtils.generateXml(requestDTO.buildReplyDTO());
+
         } else {
             // aes加密
             EncryptRequestDTO encryptRequestDTO = xmlUtils.parseXml(requestBody, EncryptRequestDTO.class);
@@ -76,9 +81,16 @@ public class WeChatController {
             // 获取解密后数据
             requestDTO = xmlUtils.parseReqMessage(content);
             requestDTO.setToUserName(encryptRequestDTO.getToUserName());
-            //
-            return signatureUtils.encryptMsg(xmlUtils.generateXml(requestDTO.buildReplyDTO()), timestamp, nonce);
         }
+        ReplyDTO replyDTO = messageHandlerActor.handle(requestDTO);
+        if (replyDTO == null) {
+            log.warn("未处理消息类型" + requestDTO.getMsgType());
+            // 不处理消息需要回复空字符串
+            return "";
+        }
+        if (StringUtils.isEmpty(encryptType)) {
+            return xmlUtils.generateXml(replyDTO);
+        }
+        return signatureUtils.encryptMsg(xmlUtils.generateXml(replyDTO), timestamp, nonce);
     }
-
 }

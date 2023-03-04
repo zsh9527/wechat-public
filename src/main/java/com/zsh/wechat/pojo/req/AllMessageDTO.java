@@ -79,7 +79,7 @@ public class AllMessageDTO extends MessageReqDTO {
     /**
      * 转换messageDTO
      */
-    public MessageReqDTO converteMessageDTO() {
+    public MessageReqDTO converMessageDTO() {
         switch (this.getMsgType()) {
             case EVENT: return MessageDTOConvertor.INSTANCE.toEventMessageDTO(this);
             case LINK: return MessageDTOConvertor.INSTANCE.toLinkMessageDTO(this);
