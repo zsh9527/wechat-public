@@ -30,4 +30,9 @@ public class WechatProp {
      * aesKey
      */
     private String aesKey;
+
+    /**
+     * app密钥
+     */
+    private String appSecret;
 }

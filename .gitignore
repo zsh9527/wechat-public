@@ -36,5 +36,5 @@ out/
 .vscode/
 
 ### database ###
-resource/db
+**/resources/db
 **/application.properties

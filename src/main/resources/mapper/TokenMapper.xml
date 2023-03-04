@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsh.wechat.mapper.TokenMapper">
+
+    <sql id="tableName">
+        `token`
+    </sql>
+
+    <insert id="insertOrUpdate">
+        INSERT INTO `token` (id, access_token, expires_in)
+            VALUE (#{tokenPO.id}, #{tokenPO.accessToken}, #{tokenPO.expresIn})
+        ON DUPLICATE KEY UPDATE access_token = #{tokenPO.accessToken}, #{tokenPO.expresIn}
+    </insert>
+
+</mapper>
