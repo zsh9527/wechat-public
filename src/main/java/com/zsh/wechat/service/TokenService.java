@@ -4,12 +4,12 @@ import com.zsh.wechat.client.HttpClient;
 import com.zsh.wechat.mapper.TokenMapper;
 import com.zsh.wechat.pojo.TokenDTO;
 import com.zsh.wechat.pojo.TokenPO;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.Executors;
